@@ -1,6 +1,6 @@
 # Forex API Export
 
-API Service that pulls forex data and returns CSV file based on the parameters
+API Service that pulls forex data and returns CSV file or JSON based on the parameters
 
 ## Setup
 
@@ -14,6 +14,9 @@ API Service that pulls forex data and returns CSV file based on the parameters
     * Any OANDA provided [instrument](https://developer.oanda.com/rest-live-v20/primitives-df/#InstrumentName)
 * granularity (required)
     * Any OANDA provided [granularity](https://developer.oanda.com/rest-live-v20/instrument-df/#CandlestickGranularity)
+* format (optional)
+    * Returns a CSV file if csv is provided
+    * Returns a JSON object if json is provided
 * count (optional) 
     * Number of candlesticks back that you want to be provided. Maximum of 2000.
     * Default (if not provided): 2000
@@ -31,11 +34,11 @@ API Service that pulls forex data and returns CSV file based on the parameters
 ### Examples
 
 * http://localhost:3000?instrument=USD_JPY&granularity=M1&count=50
-    * Returns USD/JPY Instrument data
+    * Returns USD/JPY Instrument data as a CSV file
     * Granularity of 1-minute
     * Last 50 candles
-* http://localhost:3000?instrument=EUR_USD&granularity=H1&from=1592179201&to=1592265601
-    * Returns EUR/USD Instrument data
+* http://localhost:3000?instrument=EUR_USD&granularity=H1&from=1592179201&to=1592265601&format=json
+    * Returns EUR/USD Instrument data as a JSON payload
     * Granularity of 1-hour
     * From: Tue, 15 Jun 2020 00:00:01 GMT
     * To: Tue, 16 Jun 2020 00:00:01 GMT

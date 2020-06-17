@@ -36,7 +36,29 @@ function convertToCSV(json, instrument){
     return csv;
 }
 
+function trimJSON(original, instrument) {
+    let json = {
+        'instrument': instrument,
+        'candles': []
+    }
+
+    for (idx in original) {
+        const candle = original[idx];
+        json.candles.push({
+            'time': candle.time,
+            'volume': candle.volume,
+            'high': candle.mid.h,
+            'low': candle.mid.l,
+            'open': candle.mid.o,
+            'close': candle.mid.c
+        })
+    }
+
+    return json;
+}
+
 app.get("/", (req, res, next) => {
+    const format = req.query.format || 'csv';
     const instrument = req.query.instrument;
     const granularity = req.query.granularity;
     const count = req.query.count || 2000;
@@ -70,9 +92,13 @@ app.get("/", (req, res, next) => {
     request(options, (err, response) => {
         if (err) { return console.log(err); }
 
-        const filename = instrument + "-" + granularity + "-" + Date.now() + ".csv";
-        res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-        res.csv(convertToCSV(response.body.candles, instrument), false);
+        if (format === 'csv') {
+            const filename = instrument + "-" + granularity + "-" + Date.now() + ".csv";
+            res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+            res.csv(convertToCSV(response.body.candles, instrument), false);
+        } else if (format === 'json') {
+            res.json(trimJSON(response.body.candles, instrument));
+        }
     });
 
 });
